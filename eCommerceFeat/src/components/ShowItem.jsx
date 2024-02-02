@@ -10,14 +10,14 @@ const ShowItem = ({ show }) => {
   const sanitizedSummary = show.show.summary ? show.show.summary.replace(/<[^>]*>/g, '') : '';
 
   return (
-    <div className="bg-white p-4 border rounded">
+    <div className="bg-white text-black p-4 border rounded">
       <img
         src={show.show.image && show.show.image.medium}
         alt={show.show.name}
         className="w-full h-40 object-cover mb-2"
       />
-      <h3 className="text-lg font-semibold">{show.show.name}</h3>
-      <p className="text-gray-600">
+      <h3 className="text-lg font-semibold text-black">{show.show.name}</h3>
+      <p className="text-gray-600 font-sans">
         {isSummaryVisible ? sanitizedSummary : 'Click the button to view summary'}
       </p>
       <div className="flex justify-between items-center mt-2">
@@ -27,7 +27,7 @@ const ShowItem = ({ show }) => {
         </div>
         <button
           onClick={toggleSummaryVisibility}
-          className="bg-blue-500 text-white py-2 px-4 rounded"
+          className="bg-teal-900 text-white py-2 px-4 rounded"
         >
           {isSummaryVisible ? 'Hide Summary' : 'Summary'}
         </button>

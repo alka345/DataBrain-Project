@@ -11,24 +11,24 @@ const filterGenres = (shows, selectedGenres) => {
   );
 };
 
-
 const sortShows = (shows, sortBy) => {
-    switch (sortBy) {
-      case 'name':
-        return shows.slice().sort((a, b) => a.show.name.localeCompare(b.show.name));
-      case 'runtime':
-        return shows.slice().sort((a, b) => a.show.runtime - b.show.runtime);
-      case 'rating':
-        return shows.slice().sort((a, b) => b.show.rating.average - a.show.rating.average);
-      default:
-        return shows;
-    }
-  };
+  switch (sortBy) {
+    case 'name':
+      return shows.slice().sort((a, b) => a.show.name.localeCompare(b.show.name));
+    case 'runtime':
+      return shows.slice().sort((a, b) => a.show.runtime - b.show.runtime);
+    case 'rating':
+      return shows.slice().sort((a, b) => b.show.rating.average - a.show.rating.average);
+    default:
+      return shows;
+  }
+};
 
 const App = () => {
   const [shows, setShows] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [sortBy, setSortBy] = useState('name');
+  const [isGenreVisible, setIsGenreVisible] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,42 +56,57 @@ const App = () => {
     setSortBy(e.target.value);
   };
 
+  const toggleGenreVisibility = () => {
+    setIsGenreVisible(!isGenreVisible);
+  };
+
   const filteredShows = filterGenres(shows, selectedGenres);
   const sortedShows = sortShows(filteredShows, sortBy);
 
   return (
-    <div className="flex">
-    {/* Sidebar/Navbar */}
-    <div className="w-1/4 p-4">
-      <h2 className="text-lg font-semibold mb-2">Genres</h2>
-      {Array.from(new Set(shows.flatMap((show) => show.show.genres))).map(
-        (genre) => (
-          <div key={uniqueId()}>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={selectedGenres.includes(genre)}
-                onChange={() => handleGenreChange(genre)}
-                className="mr-2"
-              />
-              {genre}
-            </label>
+    <div className="flex flex-col md:flex-row">
+      {/* Sidebar/Navbar */}
+      <div className="md:w-1/4 p-4 text-slate-200 bg-gradient-to-br from-black via-teal-800 to-black">
+        {/* Wrap the genre section inside a button for small screens */}
+        {isGenreVisible && (
+          <div className='mx-auto px-10 py-10'>
+            <h1 className='font-extrabold text-3xl mx-auto mb-10'>Show Genre List</h1>
+            {Array.from(new Set(shows.flatMap((show) => show.show.genres))).map((genre) => (
+              <div key={uniqueId()}>
+                
+                <label className="flex items-center">
+                  
+                  <input
+                    type="checkbox"
+                    checked={selectedGenres.includes(genre)}
+                    onChange={() => handleGenreChange(genre)}
+                    className="mr-2"
+                  />
+                  {genre}
+                </label>
+              </div>
+            ))}
           </div>
-        )
-      )}
-    </div>
-      
-      
+        )}
+        {/* Button to toggle genre visibility on small screens */}
+        <button
+          onClick={toggleGenreVisibility}
+          className="md:hidden bg-teal-800 text-slate-200 font-bold py-2 px-4 rounded mt-2 w-full"
+        >
+          {isGenreVisible ? 'Hide Genres' : 'Filter Show based on Genre'}
+        </button>
+      </div>
+
       {/* Main Content */}
-      <div className="w-3/4 p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Filtered Shows</h2>
+      <div className="md:w-3/4 p-4 text-slate-200 bg-gradient-to-br from-black via-teal-800 to-black">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold mb-2 md:mb-0">Filtered Shows</h2>
           <div className="flex items-center space-x-2">
             <label className="mr-2">Sort By:</label>
             <select
               value={sortBy}
               onChange={handleSortChange}
-              className="border p-1"
+              className="border text-black p-1"
             >
               <option value="name">Name</option>
               <option value="runtime">Runtime</option>
@@ -100,16 +115,14 @@ const App = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-black bg-gradient-to-br from-black via-teal-800 to-black">
           {sortedShows.map((show) => (
             <ShowItem key={show.show.id} show={show} />
           ))}
         </div>
-        </div>
+      </div>
     </div>
   );
 };
-        
-
 
 export default App;
