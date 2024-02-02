@@ -1,0 +1,39 @@
+import React, { useState } from 'react';
+
+const ShowItem = ({ show }) => {
+  const [isSummaryVisible, setIsSummaryVisible] = useState(false);
+
+  const toggleSummaryVisibility = () => {
+    setIsSummaryVisible(!isSummaryVisible);
+  };
+
+  const sanitizedSummary = show.show.summary ? show.show.summary.replace(/<[^>]*>/g, '') : '';
+
+  return (
+    <div className="bg-white p-4 border rounded">
+      <img
+        src={show.show.image && show.show.image.medium}
+        alt={show.show.name}
+        className="w-full h-40 object-cover mb-2"
+      />
+      <h3 className="text-lg font-semibold">{show.show.name}</h3>
+      <p className="text-gray-600">
+        {isSummaryVisible ? sanitizedSummary : 'Click the button to view summary'}
+      </p>
+      <div className="flex justify-between items-center mt-2">
+        <div>
+          <p className="text-gray-700">Rating: {show.show.rating.average || 'N/A'}</p>
+          <p className="text-gray-700">Runtime: {show.show.runtime || 'N/A'} mins</p>
+        </div>
+        <button
+          onClick={toggleSummaryVisibility}
+          className="bg-blue-500 text-white py-2 px-4 rounded"
+        >
+          {isSummaryVisible ? 'Hide Summary' : 'Summary'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default ShowItem;
